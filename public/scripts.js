@@ -21,57 +21,59 @@ $( document ).ready(function() {
       headers: {
         "Content-Type": "application/json"
       }
-    })
+    });
     const item = await response.json();
     prependItem(itemName, item.id, item.completed);
-  }
+    $itemInput.val('');
+  };
 
   async function getItemData() {
     const url = '/api/v1/items';
     const response = await fetch(url);
     const itemList = await response.json();
     addItemsToPage(itemList);
-  }
+  };
 
   function addItemsToPage(items) {
     items.forEach(item => prependItem(item.name, item.id, item.completed));
-  }
+  };
 
   function prependItem(name, id, status) {
     if(status === true) {
       status = 'checked'
-    }
+    };
     $itemList.prepend(`
       <article class="item" id="${id}">
         <h3>${name}</h3>
         <button class="delete-btn">delete</button>
+        <label for="checkbox"> Packed </label>
         <input 
           type="checkbox" 
           class="checkbox" 
           ${status}
         >
       </article>
-    `)
-  }
+    `);
+  };
 
   async function deleteItem() {
     const itemId = parseInt(this.parentElement.id);
     const url = `/api/v1/items/${itemId}`;
-    const body = { method: "DELETE" }
+    const body = { method: "DELETE" };
     const response = await fetch(url, body);
     $(`#${itemId}`).remove();
   }
 
   async function patchPackItem() {
     const itemId = parseInt(this.parentElement.id);
-    const packed = $(this).prop('checked')
+    const packed = $(this).prop('checked');
     
     const url = `/api/v1/items/${itemId}`;
     const body = { 
       method: "PATCH",
       body: JSON.stringify({completed: packed}),
       headers: {"Content-Type": "application/json"}
-    }
+    };
     const response = await fetch(url, body);
-  }
-})
+  };
+});
