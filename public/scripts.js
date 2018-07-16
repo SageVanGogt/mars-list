@@ -49,7 +49,7 @@ $( document ).ready(function() {
           type="checkbox" 
           class="checkbox" 
           ${status}
-          value=${status}>
+        >
       </article>
     `)
   }
