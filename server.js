@@ -7,12 +7,6 @@ const database = require('knex')(configuration);
 
 app.set('port', process.env.PORT || 3000);
 
-app.use(function(request, response, next) {
-  response.header("Access-Control-Allow-Origin", "*");
-  response.header("Access-Control-Allow-Methods", "*");
-  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,11 +27,12 @@ app.post('/api/v1/items', (request, response) => {
     return database('items').insert({
       name, 
       completed
-    }, 'id')
-      .then(itemId => {
+    }, '*')
+      .then(item => {
         return response.status(201).json({
           status: 'success',
-          id: itemId[0]
+          id: item[0].id,
+          completed: item[0].completed
         })
       })
   } else {
