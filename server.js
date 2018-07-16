@@ -30,16 +30,25 @@ app.get('/api/v1/items', (request, response) => {
 
 app.post('/api/v1/items', (request, response) => {
   const { name, completed} = request.body;
-  return database('items').insert({
-    name, 
-    completed
-  }, 'id')
-    .then(itemId => {
-      return response.status(201).json({
-        status: 'success',
-        id: itemId[0]
+  let result = ['name', 'completed']
+    .every(prop => request.body.hasOwnProperty(prop));
+
+  if(result) {
+    return database('items').insert({
+      name, 
+      completed
+    }, 'id')
+      .then(itemId => {
+        return response.status(201).json({
+          status: 'success',
+          id: itemId[0]
+        })
       })
-    })
+  } else {
+    response.status(422).json({
+      message: 'Please include all of the necessary properties in the request body'
+    });
+  }
 })
 
 module.exports = app;

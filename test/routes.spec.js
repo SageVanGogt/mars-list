@@ -85,5 +85,18 @@ describe('API routes', () => {
           done();
         })
     })
+
+    it('should not create a record if the post body is missing info', done => {
+      chai.request(server)
+        .post('/api/v1/items')
+        .send({
+          completed: false
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.message.should.equal('Please include all of the necessary properties in the request body');
+          done();
+        })
+    })
   })
 })
