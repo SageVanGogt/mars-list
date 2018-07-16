@@ -17,10 +17,6 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.listen(app.get('port'), () => {
-  console.log('Express intro running on localhost: 3000');
-});
-
 app.get('/api/v1/items', (request, response) => {
   return database('items').select()
     .then(items => {
@@ -50,5 +46,26 @@ app.post('/api/v1/items', (request, response) => {
     });
   }
 })
+
+app.delete('api/v1/items/:id', (request, response) => {
+  const itemId = request.params.id;
+  
+  return database('items').where({
+    id: itemId
+  })
+    .del()
+    .then(() => {
+      return response.status(202).json({
+        message: `Success! Item had been removed.`
+      });
+    })
+    .catch(error => {
+      return response.status(500).json({ error });
+    });
+})
+
+app.listen(app.get('port'), () => {
+  console.log('Express intro running on localhost: 3000');
+});
 
 module.exports = app;

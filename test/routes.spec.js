@@ -99,4 +99,28 @@ describe('API routes', () => {
         })
     })
   })
+
+  describe('DELETE /api/v1/items/:id', () => {
+    it('should remove an item from the database based on id', done => {
+      knex('items')
+        .select('*')
+        .then((items) => {
+          const itemObject = items[0];
+          const lengthBeforeDelete = items.length;
+          chai.request(server)
+            .delete(`/api/v1/items/${itemObject.id}`)
+            .end((err, response) => {
+              should.not.exist(err);
+              response.status.should.equal(202);
+              response.type.should.equal('application/json');
+              response.body.message.should.equal('Success! Item had been removed.');
+              knex('items').select('*')
+                .then((updatedItem) => {
+                  updatedItem.length.should.equal(lengthBeforeDelete - 1);
+                  done();
+                });
+            });
+        });
+    })
+  })
 })
