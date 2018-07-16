@@ -33,11 +33,12 @@ app.post('/api/v1/items', (request, response) => {
     return database('items').insert({
       name, 
       completed
-    }, 'id')
-      .then(itemId => {
+    }, '*')
+      .then(item => {
         return response.status(201).json({
           status: 'success',
-          id: itemId[0]
+          id: item[0].id,
+          completed: item[0].completed
         })
       })
   } else {

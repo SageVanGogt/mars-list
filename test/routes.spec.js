@@ -80,6 +80,8 @@ describe('API routes', () => {
           response.body.should.be.a('object');
           response.body.should.have.property('id');
           response.body.id.should.equal(4);
+          response.body.should.have.property('completed');
+          response.body.completed.should.equal(false);
           response.body.should.have.property('status');
           response.body.status.should.equal('success');
           done();
