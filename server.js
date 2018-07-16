@@ -17,6 +17,53 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/api/v1/items', (request, response) => {
+  return database('items').select()
+    .then(items => {
+      return response.status(200).json(items)
+    });
+});
+
+app.post('/api/v1/items', (request, response) => {
+  const { name, completed} = request.body;
+  let result = ['name', 'completed']
+    .every(prop => request.body.hasOwnProperty(prop));
+
+  if(result) {
+    return database('items').insert({
+      name, 
+      completed
+    }, 'id')
+      .then(itemId => {
+        return response.status(201).json({
+          status: 'success',
+          id: itemId[0]
+        })
+      })
+  } else {
+    response.status(422).json({
+      message: 'Please include all of the necessary properties in the request body'
+    });
+  }
+})
+
+app.delete('api/v1/items/:id', (request, response) => {
+  const itemId = request.params.id;
+  
+  return database('items').where({
+    id: itemId
+  })
+    .del()
+    .then(() => {
+      return response.status(202).json({
+        message: `Success! Item had been removed.`
+      });
+    })
+    .catch(error => {
+      return response.status(500).json({ error });
+    });
+})
+
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
 });
