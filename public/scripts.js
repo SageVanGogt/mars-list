@@ -7,6 +7,7 @@ $( document ).ready(function() {
 
   $itemSubmit.on('click', submitIdea);
   $itemList.on('click', '.delete-btn', deleteItem);
+  $itemList.on('click', '.checkbox', patchPackItem);
 
   async function submitIdea(event) {
     event.preventDefault();
@@ -41,7 +42,11 @@ $( document ).ready(function() {
       <article class="item" id="${id}">
         <h3>${name}</h3>
         <button class="delete-btn">delete</button>
-        <input type="checkbox" checked="${status}">
+        <input 
+          type="checkbox" 
+          class="checkbox" 
+          ${status && 'checkbox="checked"'}"
+          value=${status}>
       </article>
     `)
   }
@@ -52,5 +57,17 @@ $( document ).ready(function() {
     const body = { method: "DELETE" }
     const response = await fetch(url, body);
     $(`#${itemId}`).remove();
+  }
+
+  async function patchPackItem() {
+    const itemId = parseInt(this.parentElement.id);
+    const checkboxStatus = this.val();
+    const url = `/api/v1/items/${itemId}`;
+
+    const body = { 
+      method: "PATCH",
+      body: JSON.stringify({completed: !checkboxStatus})
+    }
+    const response = await fetch(url, body);
   }
 })
