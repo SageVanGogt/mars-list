@@ -66,4 +66,24 @@ describe('API routes', () => {
         })
     })
   })
+
+  describe('POST /api/v1/items', () => {
+    it('should create a new item', done => {
+      chai.request(server)
+        .post('/api/v1/items')
+        .send({
+          name: 'frickin laser beam',
+          completed: false
+        })
+        .end((err, response) => {
+          response.should.have.status(201);
+          response.body.should.be.a('object');
+          response.body.should.have.property('id');
+          response.body.id.should.equal(4);
+          response.body.should.have.property('status');
+          response.body.status.should.equal('success');
+          done();
+        })
+    })
+  })
 })

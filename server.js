@@ -25,6 +25,20 @@ app.get('/api/v1/items', (request, response) => {
   return database('items').select()
     .then(items => {
       return response.status(200).json(items)
+    });
+});
+
+app.post('/api/v1/items', (request, response) => {
+  const { name, completed} = request.body;
+  return database('items').insert({
+    name, 
+    completed
+  }, 'id')
+    .then(itemId => {
+      return response.status(201).json({
+        status: 'success',
+        id: itemId[0]
+      })
     })
 })
 
