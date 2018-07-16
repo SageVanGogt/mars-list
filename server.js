@@ -59,6 +59,19 @@ app.delete('api/v1/items/:id', (request, response) => {
     });
 })
 
+app.patch('/api/v1/items/:id', (request, response) => {
+  const itemId = request.params.id;
+  const updatedStatus = request.body.completed;
+  return database('items')
+    .where({ id: itemId })
+    .update({completed: updatedStatus})
+    .then(result => {
+      response.status(203).json({
+        status: "success"
+      });
+    });
+})
+
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
 });
