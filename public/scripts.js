@@ -6,6 +6,7 @@ $( document ).ready(function() {
   const $itemList = $('.item-list');
 
   $itemSubmit.on('click', submitIdea);
+  $itemList.on('click', '.delete-btn', deleteItem);
 
   async function submitIdea(event) {
     event.preventDefault();
@@ -39,9 +40,17 @@ $( document ).ready(function() {
     $itemList.prepend(`
       <article class="item" id="${id}">
         <h3>${name}</h3>
-        <button>delete</button>
+        <button class="delete-btn">delete</button>
         <input type="checkbox" checked="${status}">
       </article>
     `)
+  }
+
+  async function deleteItem() {
+    const itemId = parseInt(this.parentElement.id);
+    const url = `/api/v1/items/${itemId}`;
+    const body = { method: "DELETE" }
+    const response = await fetch(url, body);
+    $(`#${itemId}`).remove();
   }
 })
