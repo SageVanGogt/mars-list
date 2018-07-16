@@ -5,11 +5,11 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8000);
+
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/v1/items', (request, response) => {
   return database('items').select()
@@ -42,7 +42,7 @@ app.post('/api/v1/items', (request, response) => {
   }
 })
 
-app.delete('api/v1/items/:id', (request, response) => {
+app.delete('/api/v1/items/:id', (request, response) => {
   const itemId = request.params.id;
   
   return database('items').where({
@@ -61,8 +61,7 @@ app.delete('api/v1/items/:id', (request, response) => {
 
 app.patch('/api/v1/items/:id', (request, response) => {
   const itemId = request.params.id;
-  const updatedStatus = request.body.completed;
-  return database('items')
+  const updatedStatus = request.body.completed;  return database('items')
     .where({ id: itemId })
     .update({completed: updatedStatus})
     .then(result => {
@@ -73,7 +72,7 @@ app.patch('/api/v1/items/:id', (request, response) => {
 })
 
 app.listen(app.get('port'), () => {
-  console.log('Express intro running on localhost: 3000');
+  console.log('Express intro running on localhost: 9000');
 });
 
 module.exports = app;

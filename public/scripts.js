@@ -34,10 +34,13 @@ $( document ).ready(function() {
   }
 
   function addItemsToPage(items) {
-    items.forEach(item => prependItem(item));
+    items.forEach(item => prependItem(item.name, item.id, item.completed));
   }
 
   function prependItem(name, id, status) {
+    if(status === true) {
+      status = 'checked'
+    }
     $itemList.prepend(`
       <article class="item" id="${id}">
         <h3>${name}</h3>
@@ -45,7 +48,7 @@ $( document ).ready(function() {
         <input 
           type="checkbox" 
           class="checkbox" 
-          ${status && 'checkbox="checked"'}"
+          ${status}
           value=${status}>
       </article>
     `)
@@ -61,12 +64,13 @@ $( document ).ready(function() {
 
   async function patchPackItem() {
     const itemId = parseInt(this.parentElement.id);
-    const checkboxStatus = this.val();
+    const packed = $(this).prop('checked')
+    
     const url = `/api/v1/items/${itemId}`;
-
     const body = { 
       method: "PATCH",
-      body: JSON.stringify({completed: !checkboxStatus})
+      body: JSON.stringify({completed: packed}),
+      headers: {"Content-Type": "application/json"}
     }
     const response = await fetch(url, body);
   }
