@@ -10,7 +10,7 @@ $( document ).ready(function() {
   async function submitIdea(event) {
     event.preventDefault();
     const itemName = $itemInput.val();
-    const response = await fetch('http://localhost:3000/api/v1/items', {
+    const response = await fetch('/api/v1/items', {
       method: 'POST',
       body: JSON.stringify({
         name: itemName,
@@ -25,7 +25,14 @@ $( document ).ready(function() {
   }
 
   async function getItemData() {
-    console.log('itemdata')
+    const url = '/api/v1/items';
+    const response = await fetch(url);
+    const itemList = await response.json();
+    addItemsToPage(itemList);
+  }
+
+  function addItemsToPage(items) {
+    items.forEach(item => prependItem(item));
   }
 
   function prependItem(name, id, status) {
