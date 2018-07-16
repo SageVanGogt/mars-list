@@ -50,4 +50,20 @@ describe('API routes', () => {
         done();
       });
   });
+
+  describe('GET /api/v1/items', () => {
+    it('should return an array of items', done => {
+      chai.request(server)
+        .get('/api/v1/items')
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('array')
+          response.body.length.should.equal(3);
+          response.body[0].should.have.property('name');
+          response.body[0].name.should.equal('toothbrush');
+          done();
+        })
+    })
+  })
 })

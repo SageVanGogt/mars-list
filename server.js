@@ -21,4 +21,11 @@ app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
 });
 
+app.get('/api/v1/items', (request, response) => {
+  return database('items').select()
+    .then(items => {
+      return response.status(200).json(items)
+    })
+})
+
 module.exports = app;
