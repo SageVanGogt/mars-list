@@ -71,7 +71,13 @@ app.patch('/api/v1/items/:id', (request, response) => {
       response.status(203).json({
         status: "success"
       });
-    });
+    })
+    .catch(error => {
+      return response.status(500).json({
+        error,
+        message: "Could not find the requested item for updating"
+      })
+    })
 })
 
 app.listen(app.get('port'), () => {

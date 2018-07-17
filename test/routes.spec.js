@@ -151,5 +151,15 @@ describe('API routes', () => {
           done();
         });
     });
+
+    it('should return an error if the id does not exist', done => {
+      chai.request(server)
+        .patch('/api/v1/items/:10')
+        .end((err, response) => {
+          response.should.have.status(500);
+          response.body.message.should.equal('Could not find the requested item for updating');
+          done();
+        })
+    })
   });
 })
