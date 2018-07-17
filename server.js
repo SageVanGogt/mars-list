@@ -55,7 +55,10 @@ app.delete('/api/v1/items/:id', (request, response) => {
       });
     })
     .catch(error => {
-      return response.status(500).json({ error });
+      return response.status(500).json({ 
+        message: 'Could not find item' ,
+        error
+      });
     });
 })
 
