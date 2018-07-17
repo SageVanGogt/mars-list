@@ -55,7 +55,7 @@ app.delete('/api/v1/items/:id', (request, response) => {
       });
     })
     .catch(error => {
-      return response.status(500).json({ 
+      return response.status(404).json({ 
         message: 'Could not find item' ,
         error
       });
@@ -68,12 +68,12 @@ app.patch('/api/v1/items/:id', (request, response) => {
     .where({ id: itemId })
     .update({completed: updatedStatus})
     .then(result => {
-      response.status(203).json({
+      response.status(200).json({
         status: "success"
       });
     })
     .catch(error => {
-      return response.status(500).json({
+      return response.status(404).json({
         error,
         message: "Could not find the requested item for updating"
       })

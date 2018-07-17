@@ -129,7 +129,7 @@ describe('API routes', () => {
       chai.request(server)
         .delete('/api/v1/items/:10')
         .end((err, response) => {
-          response.should.have.status(500);
+          response.should.have.status(404);
           response.body.message.should.equal('Could not find item');
           done();
         })
@@ -144,7 +144,7 @@ describe('API routes', () => {
           completed: true
         })
         .end((err, response) => {
-          response.should.have.status(203);
+          response.should.have.status(200);
           response.body.should.be.a('object');
           response.body.should.have.property('status');
           response.body.status.should.equal('success');
@@ -156,7 +156,7 @@ describe('API routes', () => {
       chai.request(server)
         .patch('/api/v1/items/:10')
         .end((err, response) => {
-          response.should.have.status(500);
+          response.should.have.status(404);
           response.body.message.should.equal('Could not find the requested item for updating');
           done();
         })
